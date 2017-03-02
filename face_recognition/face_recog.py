@@ -29,10 +29,10 @@ def load_recognizer_data():
         first_run = False
         recognizer.load("xml/face_recog_data.xml")
         print "Loaded Recognizer Data."
-        labels_load = np.array(np.loadtxt(xml_path+"/face_data.xml", unpack=True, dtype=str, ndmin=1))
+        labels = np.array(np.loadtxt(xml_path+"/face_data.xml", unpack=True, dtype=str, ndmin=1))
 
 def update_recognizer(face,name):
-    global first_run
+    global first_run, labels
     labels.append(name)
     recognizer.update(np.array([cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)]), np.array(len(labels)-1))
     print "Recognizer updated."
