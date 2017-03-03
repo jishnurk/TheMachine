@@ -8,7 +8,10 @@ neg_resp = ["Sorry, I am learning.", "Pardon me, I don't know you."]
 
 def tts(typ,text):
     speech_eng = pyttsx.init()
-    if get_type(typ) != 0:
+    if typ == 't':
+        speech_eng.say(text)
+        speech_eng.runAndWait()
+    elif get_type(typ) != 0:
         speech_eng.say(get_type(typ)[random.randrange(len(get_type(typ)))]+text)
         speech_eng.runAndWait()
 
