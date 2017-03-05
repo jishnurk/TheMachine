@@ -1,21 +1,9 @@
 #!/usr/bin/python
 
-import cv2, Image, os, numpy as np, pyttsx, random
-from threading import Thread
+from face_recognition import *
 
 
-#################### Variables ####################
-
-faces_path = 'face_recognition/faces/'
-xml_path = 'face_recognition/xml/'
-i=0
-labels = np.empty(0)
-first_run = True
-conf = 0
-nbr_predicted = 0
-neg_resp = ["Sorry, I am still learning.", "Pardon me, I don't know you."]
-
-#################### FUNCTIONS ####################
+#################### Sub Functions ####################
 
 def load_recognizer_data():
     if [f for f in os.listdir(xml_path) if f.startswith("face_recog_data")] :
@@ -23,37 +11,29 @@ def load_recognizer_data():
         first_run = False
         recognizer.load(xml_path+"face_recog_data.xml")
         #print "Recognizer Data loaded."
-        labels = np.array(np.loadtxt(xml_path+"/face_data.xml", unpack=True, dtype=str, ndmin=1))
+        labels = numpy.array(numpy.loadtxt(xml_path+"/face_data.xml", unpack=True, dtype=str, ndmin=1))
     return    
 
 
 def update_recognizer(face,name):
     global first_run, labels, recognizer
-    labels = np.append(labels,name)
-    recognizer.update(np.array([cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)]), np.array(len(labels)-1))
+    labels = numpy.append(labels,name)
+    recognizer.update(numpy.array([cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)]), numpy.array(len(labels)-1))
     #print "Recognizer updated."
     recognizer.save(xml_path+"face_recog_data.xml")
     f = open(xml_path+"face_data.xml", "w")
-    np.savetxt(f, np.column_stack([labels]), fmt='%s')
+    numpy.savetxt(f, numpy.column_stack([labels]), fmt='%s')
     #print "Saved Recognizer Data to xml\\face_recog_data.xml and xml\\face_data.xml"
     first_run = False
     return
 
 
-#################### Start ####################
+#################### Main Function ####################
 
 def recog_face(img):
-    global recognizer, nbr_predicted, conf, i
-    face_cascade = cv2.CascadeClassifier(xml_path+"haarcascade_frontalface_default.xml")
-    eye_cascade = cv2.CascadeClassifier(xml_path+"haarcascade_eye.xml")
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
-    recognizer = cv2.createLBPHFaceRecognizer()
-
-    speech_eng = pyttsx.init()
-
+    global nbr_predicted, conf
     load_recognizer_data()
-
-    img_shw = np.array(img)
+    img_shw = numpy.array(img)
     gray = clahe.apply(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
     faces = face_cascade.detectMultiScale(gray, 1.3, 5, minSize=(75, 75), maxSize=(500, 500))
     for (x,y,w,h) in faces:
