@@ -1,18 +1,17 @@
 #!/usr/bin/python
 
-import pyttsx, random
+from text_to_speech import *
 
-greet = ["Hi ", "Hello "]
-pos_resp = ["My pleasure."]
-neg_resp = ["Sorry, I am learning.", "Pardon me, I don't know you."]
 
 def tts(typ,text):
-    speech_eng = pyttsx.init()
     if typ == 't':
+        print text
         speech_eng.say(text)
         speech_eng.runAndWait()
     elif get_type(typ) != 0:
-        speech_eng.say(get_type(typ)[random.randrange(len(get_type(typ)))]+text)
+        i = random.randrange(len(get_type(typ)))
+        print get_type(typ)[i]+text
+        speech_eng.say(get_type(typ)[i]+text)
         speech_eng.runAndWait()
 
 def get_type(typ):
