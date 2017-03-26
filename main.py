@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
-import cv2, Image, numpy, sys
+import cv2, Image, numpy, sys, speech_recognition
 from face_recognition import face_recog
 from text_to_speech import text2speech
 from threading import Thread
 
 run = True
-
+WIT_AI_KEY = "API_KEY"
+speech_recog = speech_recognition.Recognizer()
 
 def update():
     while True:
@@ -43,6 +44,20 @@ def face_recog_module():
         if k == 27: # Exit if ESC is pressed
             run = False
             return
+        
+def listen():
+    with speech_recognition.Microphone() as source:
+        speech_recog.adjust_for_ambient_noise(source)
+        audio = speech_recog.listen(source)
+    try:
+        return speech_recog.recognize_wit(audio, key=WIT_AI_KEY)
+        #return speech_recog.recognize_google(audio)
+        #return speech_recog.recognize_sphinx(audio)
+    except speech_recognition.UnknownValueError:
+        print("Could not understand audio")
+    except speech_recognition.RequestError as e:
+        print("Recog Error; {0}".format(e))
+    return ""
 
 
 print "################## the Machine v_alpha_1 ##################\n########### Jishnu Radhakrishnan : Manoj S Nair ###########\n"

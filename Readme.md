@@ -7,7 +7,10 @@ Requirements:
 	2. Numpy  
 	3. OpenCV 2  
 	4. PIL  
-	5. Pyttsx  
+	5. PyAudio  
+	6. Pyttsx
+	7. Pywit (WIP)
+	8. Speech Recognition (WIP)
 	  
 Contributors:  
 	1. Jishnu Radhakrishnan  
